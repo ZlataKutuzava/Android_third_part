@@ -1,15 +1,16 @@
 package com.example.androideatit;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.androideatit.Interface.ItemClickListener;
-import com.example.androideatit.Model.Foods;
-import com.example.androideatit.ViewHolder.FoodsViewHolder;
+import com.example.androideatit.Model.Food;
+import com.example.androideatit.ViewHolder.FoodViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -23,9 +24,9 @@ public class FoodList extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference foodList;
 
-    String categoryId = "";
+    String categoryId="";
 
-    FirebaseRecyclerAdapter<Foods, FoodsViewHolder> adapter;
+    FirebaseRecyclerAdapter<Food, FoodViewHolder> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class FoodList extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         foodList = database.getReference("Foods");
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_food);
+        recyclerView = (RecyclerView)findViewById(R.id.recycler_food);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -50,28 +51,28 @@ public class FoodList extends AppCompatActivity {
     }
 
     private void loadListFood(String categoryId) {
-        adapter = new FirebaseRecyclerAdapter<Foods, FoodsViewHolder>(Foods.class,
+        adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(Food.class,
                 R.layout.food_item,
-                FoodsViewHolder.class,
-                foodList.orderByChild("MenuId").equalTo(categoryId)  //like: select * from Foods where MenuId =
-        ) {
+                FoodViewHolder.class,
+                foodList.orderByChild("MenuId").equalTo(categoryId) //like select * from Foods where MenuId =
+                ) {
             @Override
-            protected void populateViewHolder(FoodsViewHolder viewHolder, Foods model, int position) {
+            protected void populateViewHolder(FoodViewHolder viewHolder, Food model, int position) {
                 viewHolder.food_name.setText(model.getName());
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(viewHolder.food_image);
 
-                final Foods local = model;
+                final Food local = model;
                 viewHolder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClcik) {
-                        //Start new Activity
-                        Intent foodDetail = new Intent(FoodList.this, FoodDetail.class);
-                        foodDetail.putExtra("FoodId", adapter.getRef(position).getKey()); //Send Food Id to new activity
-                        startActivity(foodDetail);
+                        Toast.makeText(FoodList.this, ""+local.getName(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         };
+
+        Log.d("TAG",""+adapter.getItemCount());
+        recyclerView.setAdapter(adapter);
     }
 }

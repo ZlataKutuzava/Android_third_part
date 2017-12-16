@@ -22,7 +22,7 @@
 
         <TextView
             android:id="@+id/food_name"
-            android:text="Name of food"
+            android:text="Name of Food"
             android:textColor="@android:color/white"
             android:background="#4f0e0f0e"
             android:textSize="20sp"

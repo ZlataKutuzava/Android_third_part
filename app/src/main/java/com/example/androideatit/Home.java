@@ -53,6 +53,8 @@ public class Home extends AppCompatActivity
         database = FirebaseDatabase.getInstance();
         category = database.getReference("Category");
 
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +88,8 @@ public class Home extends AppCompatActivity
     }
 
     private void loadMenu() {
-         adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(Category.class, R.layout.menu_item, MenuViewHolder.class, category) {
+
+        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(Category.class,R.layout.menu_item,MenuViewHolder.class,category) {
             @Override
             protected void populateViewHolder(MenuViewHolder viewHolder, Category model, int position) {
                 viewHolder.txtMenuName.setText(model.getName());
@@ -95,16 +98,16 @@ public class Home extends AppCompatActivity
                 viewHolder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClcik) {
-                        //Get CategoryID and send to new Activity
+                       //Get CategoryId and send to new Activity
                         Intent foodList = new Intent(Home.this, FoodList.class);
-                        //Because CategoryId is jey, so we just get key of this item
-                        foodList.putExtra("CategoryId", adapter.getRef(position).getKey());
+                        //Because CategoryId is key, so we jusr get key of this item
+                        foodList.putExtra("CategoryId",adapter.getRef(position).getKey());
                         startActivity(foodList);
                     }
                 });
             }
         };
-        recycler_menu.setAdapter(adapter);
+         recycler_menu.setAdapter(adapter);
     }
 
     @Override
